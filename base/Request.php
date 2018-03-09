@@ -41,6 +41,12 @@ class Request
     private $_header = [];
 
     /**
+     * 实例
+     * @var $this
+     */
+    private static $_instance;
+
+    /**
      * Request constructor.
      */
     public function __construct()
@@ -76,12 +82,15 @@ class Request
     }
 
     /**
-     * 创建实例
+     * 获取实例
      * @return $this
      */
-    public static function create()
+    public static function getInstance()
     {
-        return new self();
+        if (empty(self::$_instance)) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
     }
 
     /**

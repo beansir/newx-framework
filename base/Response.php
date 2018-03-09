@@ -44,6 +44,12 @@ class Response
     private $_type;
 
     /**
+     * 实例
+     * @var $this
+     */
+    private static $_instance;
+
+    /**
      * Response constructor.
      * @param string $type
      */
@@ -53,13 +59,16 @@ class Response
     }
 
     /**
-     * 创建实例
+     * 获取实例
      * @param string $type
      * @return $this
      */
-    public static function create($type = null)
+    public static function getInstance($type = null)
     {
-        return new self($type);
+        if (empty(self::$_instance)) {
+            self::$_instance = new self($type);
+        }
+        return self::$_instance;
     }
 
     /**
@@ -74,7 +83,7 @@ class Response
         $this->setMsg($msg, 'success');
         $this->setCode($code, 1);
         $this->setData($data);
-        $this->output();
+        return $this->output();
     }
 
     /**
@@ -89,7 +98,7 @@ class Response
         $this->setMsg($msg, 'error');
         $this->setCode($code, 0);
         $this->setData($data);
-        $this->output();
+        return $this->output();
     }
 
     /**
@@ -148,20 +157,24 @@ class Response
             'msg' => $this->_msg,
             'data' => $this->_data
         ];
+
+        if (!$this->_type) {
+            $this->_type = static::CONTENT_TYPE_JSON;
+        }
+
         switch ($this->_type) {
             case static::CONTENT_TYPE_JSON:
                 header('Content-type: application/json; charset=utf-8');
-                echo json_encode($data);
+                $data = json_encode($data);
                 break;
             case static::CONTENT_TYPE_XML:
                 header('Content-type: application/xml; charset=utf-8');
-                echo ArrayHelper::xml($data);
+                $data = ArrayHelper::xml($data);
                 break;
             default:
-                $this->_type = static::CONTENT_TYPE_JSON;
-                $this->output();
+                $data = null;
                 break;
         }
-        exit;
+        return $data;
     }
 }

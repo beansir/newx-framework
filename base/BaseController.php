@@ -43,12 +43,6 @@ class BaseController extends BaseObject
     protected $renderData;
 
     /**
-     * 请求体
-     * @var Request
-     */
-    protected $request;
-
-    /**
      * 渲染视图
      * @param string $view 视图
      * @param array $data 数据
@@ -187,7 +181,7 @@ class BaseController extends BaseObject
      */
     protected function getResponse($type = null)
     {
-        return Response::create($type);
+        return Response::getInstance($type);
     }
 
     /**
@@ -196,9 +190,6 @@ class BaseController extends BaseObject
      */
     protected function getRequest()
     {
-        if (!$this->request) {
-            $this->request = Request::create();
-        }
-        return $this->request;
+        return Request::getInstance();
     }
 }
