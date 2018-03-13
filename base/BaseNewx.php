@@ -7,6 +7,7 @@
 namespace newx\base;
 
 use newx\helpers\ArrayHelper;
+use newx\orm\NewxOrm;
 
 class BaseNewx
 {
@@ -15,12 +16,6 @@ class BaseNewx
      * @var Application
      */
     private static $_app;
-
-    /**
-     * 目录
-     * @var array
-     */
-    private static $_dirs = [];
 
     /**
      * 第三方库
@@ -42,9 +37,6 @@ class BaseNewx
         // 自动加载类
         require NEWX_PATH . '/base/AutoLoader.php';
 
-        // 数据库ORM
-        require NEWX_PATH . '/../newx-orm/NewxOrm.php';
-
         // 全局函数库
         require NEWX_PATH . '/function.php';
 
@@ -60,10 +52,10 @@ class BaseNewx
     {
         // 加载ORM
         $db = ArrayHelper::value($config, 'database');
-        \NewxOrm::run($db);
+        NewxOrm::load($db);
 
         // 加载自定义函数库
-        $file = \Newx::getDir('app') . 'config/function.php';
+        $file = APP_PATH . 'config/function.php';
         if (file_exists($file)) {
             require_once $file;
         }
@@ -111,30 +103,6 @@ class BaseNewx
     }
 
     /**
-     * 获取目录
-     * @param string $name
-     * @return string|null
-     */
-    public static function getDir($name = null)
-    {
-        if (array_key_exists($name, self::$_dirs)) {
-            return self::$_dirs[$name];
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 配置目录
-     * @param string $name
-     * @param string $value
-     */
-    public static function setDir($name, $value)
-    {
-        self::$_dirs[$name] = $value;
-    }
-
-    /**
      * 配置对象属性
      * @param object $object
      * @param array $data
@@ -160,6 +128,15 @@ class BaseNewx
      */
     public static function getDb($name = 'default')
     {
-        return \NewxOrm::getDb($name);
+        return NewxOrm::getDb($name);
+    }
+
+    /**
+     * 获取组件
+     * @return Component
+     */
+    public static function getComponent()
+    {
+        return self::getApp()->component;
     }
 }

@@ -25,7 +25,7 @@ class AutoLoader
         }
 
         // 检查类文件是否存在
-        $classFile = Newx::getDir('module') . $class . '.php';
+        $classFile = PROJECT_PATH . $class . '.php';
         $classFile = str_replace('\\', '/', $classFile); // 兼容linux
 
         if (!file_exists($classFile)) {

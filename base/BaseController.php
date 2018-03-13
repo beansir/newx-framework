@@ -84,7 +84,7 @@ class BaseController extends BaseObject
      */
     private function getView()
     {
-        return Newx::getDir('app') . $this->viewPath;
+        return APP_PATH . $this->viewPath;
     }
 
     /**

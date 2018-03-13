@@ -116,7 +116,7 @@ class Application extends BaseObject
         }
 
         // 检索路由控制器
-        $controllerDir = Newx::getDir('module') . $controller; // 控制器文件首级路径
+        $controllerDir = PROJECT_PATH . $controller; // 控制器文件首级路径
         foreach ($uris as $key => $uri) {
             if (empty($uri)) {
                 continue;

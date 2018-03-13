@@ -22,6 +22,7 @@ composer require beansir/newx-framework
         * layout.php // 视图布局文件
     * public // 资源目录
         * index.php // 入口文件
+* vendor // 框架目录
 
 ## MVC（Model View Controller）
 
@@ -61,10 +62,62 @@ class UserModel extends Model // 模型首字母大写并以Model为后缀，继
 ```
 简洁优雅的数据库交互用法请参考[NewX ORM文档](https://github.com/BeanYellow/newx-orm)
 
-## AES数据加密
+## Request
+
+#### 场景一
+Controller中获取请求数据
 ```php
 <?php
-$aes = new \newx\mcrypt\Aes(); // 默认CBC模式
-$str = $aes->encrypt($str); // 加密（加密后默认base64编码，可用第二个参数更改）
-$str = $aes->decrypt($str); // 解密
+namespace app\controllers;
+class HomeController extends \newx\base\BaseController
+{
+    public function actionIndex() 
+    {
+        $get_all = $this->getRequest()->get(); // $_GET
+        $get_name = $this->getRequest()->get('name');
+        $post_all = $this->getRequest()->post(); // $_POST
+        $post_name = $this->getRequest()->post('name');
+        $header = $this->getRequest()->header(); // HEADER
+    }
+}
+```
+
+#### 场景二
+Model中获取请求数据
+```php
+<?php
+namespace app\models;
+class UserModel
+{
+    public function test()
+    {
+         $request = \newx\base\Request::getInstance();
+         $get_all = $request->get();
+         $get_name = $request->get('name');
+         $post_all = $request->post();
+         $post_name = $request->post('name');
+         $header = $request->header();
+    }
+}
+```
+
+## Response
+
+```php
+<?php
+namespace app\controllers;
+class HomeController extends \newx\base\BaseController
+{
+    public function actionIndex() 
+    {
+        // JSON格式（默认）
+        $response = $this->getResponse()->success('success', []); // 成功响应
+        $response = $this->getResponse()->error('error', []); // 失败响应
+        
+        // XML格式
+        $response = $this->getResponse(\newx\base\Response::CONTENT_TYPE_XML)->success('success', []);
+        
+        return $response;
+    }
+}
 ```
